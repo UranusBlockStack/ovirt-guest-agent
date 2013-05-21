@@ -38,7 +38,7 @@ def QueryStringValue(hkey, name):
     return key_value.value
 
 def GetNetworkInterfaces():
-    interfaces = list()
+    interfaces = dict()
     try:
         objWMIService = win32com.client.Dispatch("WbemScripting.SWbemLocator")
         objSWbemServices = objWMIService.ConnectServer(".", "root\cimv2")
@@ -56,12 +56,15 @@ def GetNetworkInterfaces():
                         except socket.error:
                             # Assume IPv6 if parsing as IPv4 was failed.
                             inet6.append(ip)
-                interfaces.append({ 'name' : adapter.Description,
+                mac = adapter.MacAddress.lower()                
+                if interfaces.has_key(mac) == False:
+                    interface = {'name' : adapter.Description,
                     'inet' : inet, 'inet6' : inet6,
-                    'hw' : adapter.MacAddress.lower() })
+                    'hw' : mac }
+                    interfaces[mac] = interface
     except:
         logging.exception("Error retrieving network interfaces.")
-    return interfaces
+    return interfaces.values()
 
 class PERFORMANCE_INFORMATION(Structure):
     _fields_ = [

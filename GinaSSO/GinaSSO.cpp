@@ -23,7 +23,7 @@
 
 // Location of the real MSGINA.
 #define REALGINA_PATH      TEXT("MSGINA.DLL")
-#define ORIGINAL_CUSTOM_GINA_POINTER_LOCATION	L"SOFTWARE\\RedHat\\SSO"
+#define ORIGINAL_CUSTOM_GINA_POINTER_LOCATION	L"SOFTWARE\\Uranus\\SSO"
 #define	ORIGINAL_CUSTOM_GINA_REGISTY_VALUE_NAME	L"OriginalCustomGina"
 
 #define GINASTUB_VERSION   (WLX_VERSION_1_4) // Highest version supported at

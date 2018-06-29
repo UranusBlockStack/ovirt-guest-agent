@@ -69,13 +69,13 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "Red Hat Inc."
+            VALUE "CompanyName", "Uranus Inc."
             VALUE "FileDescription", "SSO replacement for the GINA module"
             VALUE "FileVersion", "1, 0, 0, 1"
             VALUE "InternalName", "GinaSSO"
-            VALUE "LegalCopyright", "Copyright (C) 2009 Red Hat Inc. All rights reserved."
+            VALUE "LegalCopyright", "Copyright (C) 2009 Uranus Inc. All rights reserved."
             VALUE "OriginalFilename", "GinaSSO.dll"
-            VALUE "ProductName", "Red Hat SSO"
+            VALUE "ProductName", "Uranus SSO"
             VALUE "ProductVersion", "1, 0, 0, 1"
         END
     END

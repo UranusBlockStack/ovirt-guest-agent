@@ -25,14 +25,14 @@ doesn't require Python installation for running
 Source code modifications:
 --------------------------
 
-Update the AGENT_CONFIG global variable in OVirtGuestService.py to point to
+Update the AGENT_CONFIG global variable in UranusGuestService.py to point to
 right configuration location.
 
 Running the service:
 --------------------
 
-> python OVirtGuestService.py -install
-> net start OVirtGuestService
+> python UranusGuestService.py -install
+> net start UranusGuestService
 
 Building executable file:
 -------------------------

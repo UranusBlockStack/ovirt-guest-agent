@@ -18,13 +18,14 @@ class Target:
         self.__dict__.update(kw)
         self.version = "%s.%s"%(version.version_info['software_version'],
                                 version.version_info['software_revision'])
-        self.company_name = "Red Hat"
-        self.copyright = "Copyright(C) Red Hat Inc."
+        self.company_name = "Uranus"
+        self.copyright = "Copyright(C) Uranus Inc."
         self.name = "Guest VDS Agent "
 
 OVirtAgentTarget = Target(
-    description = "Ovirt Guest Agent",
-    modules = ["OVirtGuestService"]
+    description = "Uranus guest agent",
+    modules = ["UranusGuestService"],
+    cmdline_style='pywin32'
     )
 
 DLL_EXCLUDES = [ 'POWRPROF.dll', 'KERNELBASE.dll', 'WTSAPI32.dll', 'MSWSOCK.dll' ]

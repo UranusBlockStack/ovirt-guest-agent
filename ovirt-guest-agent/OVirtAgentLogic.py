@@ -170,6 +170,8 @@ class AgentLogicBase:
         elif command == 'hibernate':
             state = args.get('state', 'disk')
             self.commandHandler.hibernate(state)
+        elif command == 'reboot':
+            self.commandHandler.reboot()
         else:
             logging.error("Unknown external command: %s (%s)" % (command, args))
 

@@ -177,8 +177,34 @@ class CommandHandlerWin:
         else:
             logging.debug("No active session. Ignoring log off command.")
 
+    def reboot(self):
+        cmd = "%s\\system32\\shutdown.exe -r -f" % (os.environ['WINDIR'])
+        logging.debug("Executing shutdown command: '%s'", cmd)
+
+        # Since we're a 32-bit application that sometimes is executed on
+        # Windows 64-bit, executing C:\Windows\system32\shutdown.exe is
+        # redirected to C:\Windows\SysWOW64\shutdown.exe. The later doesn't
+        # exist and we get a "file not found" error. The solution is to
+        # disable redirection before executing the shutdown command and
+        # re-enable redirection once we're done.
+        old_value = c_void_p()
+        try:
+            windll.kernel32.Wow64DisableWow64FsRedirection(byref(old_value))
+        except AttributeError:
+            # The function doesn't exist on 32-bit Windows so exeception is
+            # ignored.
+            pass
+
+        subprocess.call(cmd)
+
+        # Calling this function with the old value received from the first
+        # call re-enable the file system redirection.
+        if old_value:
+            windll.kernel32.Wow64DisableWow64FsRedirection(old_value) 
+
     def shutdown(self, timeout, msg):
-        cmd = "%s\\system32\\shutdown.exe -s -t %d -f -c \"%s\"" % (os.environ['WINDIR'], timeout, msg)
+        #cmd = "%s\\system32\\shutdown.exe -s -t %d -f -c \"%s\"" % (os.environ['WINDIR'], timeout, msg)
+        cmd = "%s\\system32\\shutdown.exe -s -f" % (os.environ['WINDIR'])
         logging.debug("Executing shutdown command: '%s'", cmd)
 
         # Since we're a 32-bit application that sometimes is executed on
@@ -256,6 +282,9 @@ class WinDataRetriver(DataRetriverBase):
     def getAllNetworkInterfaces(self):
         return GetNetworkInterfaces()
 
+    def is64Windows(self): 
+        return 'PROGRAMFILES(X86)' in os.environ
+
     def getApplications(self):
         retval = []
         key_path = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall"
@@ -277,6 +306,34 @@ class WinDataRetriver(DataRetriverBase):
                 retval.append(cur_key_value)
             except:
                 pass
+        key_path = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall"
+        rootKey = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, key_path, 0, win32con.KEY_READ|win32con.KEY_WOW64_64KEY)
+        itemsnum = win32api.RegQueryInfoKey(rootKey)[0]      
+        print itemsnum
+        
+        if self.is64Windows() == True:
+            for idx in range(itemsnum):
+                #print idx
+                item = win32api.RegEnumKey(rootKey, idx)
+                #print item
+                cur_key_path = key_path + "\\" + item
+                #print cur_key_path
+                cur_key = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, cur_key_path, 0, win32con.KEY_READ|win32con.KEY_WOW64_64KEY)
+                #cur_key_value = win32api.RegQueryInfoKey(cur_key)
+                cur_key_value = QueryStringValue(cur_key, u"DisplayName")
+                #print cur_key_value
+                try:
+                    if len(cur_key_value) == 0:
+                        continue
+                    if cur_key_value.find("Hotfix") >= 0:
+                        continue
+                    if cur_key_value.find("Security Update") >= 0:
+                        continue
+                    if cur_key_value.find("Update for Windows") >= 0:
+                        continue
+                    retval.append(cur_key_value)
+                except:
+                    pass            
         return retval
 
     def getAvailableRAM(self):
@@ -319,14 +376,17 @@ class WinDataRetriver(DataRetriverBase):
                 # Use FQDN as user name if computer is part of a domain.
                 try:
                     user = u"%s\\%s" % (domain, user)
-                    user = win32security.TranslateName(user,
+                    translateduser = win32security.TranslateName(user,
                         win32api.NameSamCompatible, win32api.NameUserPrincipal)
                     # Check for error because no exception is raised when running under Windows XP.
                     err = win32api.GetLastError()
                     if err != 0:
                         raise RuntimeError(err, 'TranslateName')
                 except:
+                    translateduser = user
                     logging.exception("Error on user name translation.")
+                finally:
+                    user = translateduser
             else:
                 user = u"%s@%s" % (user, domain)
         except:

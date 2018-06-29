@@ -443,7 +443,7 @@ BOOL	ReadConfigValues()
 	DWORD	dwType=REG_DWORD;
     DWORD	dwSize=sizeof(DWORD);
 
-    returnStatus = RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\RedHat\\SSO", 0L,  KEY_ALL_ACCESS, &hKey);
+    returnStatus = RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Uranus\\SSO", 0L,  KEY_ALL_ACCESS, &hKey);
     if (returnStatus == ERROR_SUCCESS)
     {
 
@@ -481,7 +481,7 @@ BOOL	ReadOriginalGinaControlValues()
 	DWORD	dwType=REG_DWORD;
     DWORD	dwSize=sizeof(DWORD);
 
-    returnStatus = RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\RedHat\\SSO", 0L,  KEY_ALL_ACCESS, &hKey);
+    returnStatus = RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Uranus\\SSO", 0L,  KEY_ALL_ACCESS, &hKey);
     if (returnStatus == ERROR_SUCCESS)
     {
 

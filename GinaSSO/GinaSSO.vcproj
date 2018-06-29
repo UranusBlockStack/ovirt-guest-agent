@@ -63,6 +63,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib"
+				OutputFile="$(OutDir)\CTVMSSO.dll"
 				LinkIncremental="2"
 				ModuleDefinitionFile="GinaSSO.Def"
 				GenerateDebugInformation="true"
@@ -138,6 +139,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Ws2_32.lib"
+				OutputFile="$(OutDir)\CTVMSSO.dll"
 				LinkIncremental="1"
 				ModuleDefinitionFile="GinaSSO.Def"
 				GenerateDebugInformation="true"

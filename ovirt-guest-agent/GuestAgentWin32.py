@@ -436,6 +436,15 @@ class WinDataRetriver(DataRetriverBase):
         except:
             logging.exception("Error retrieving detailed memory stats")
         return self.memStats
+    
+    def getTotalRDPConnections(self):
+        total = 0
+        for s in win32ts.WTSEnumerateSessions(win32ts.WTS_CURRENT_SERVER_HANDLE, 1):
+            if s['State'] == win32ts.WTSActive:
+                type_value = win32ts.WTSQuerySessionInformation(win32ts.WTS_CURRENT_SERVER_HANDLE, s['SessionId'], win32ts.WTSClientProtocolType)
+                if type_value == win32ts.WTS_PROTOCOL_TYPE_RDP:
+                    total = total + 1
+        return total
 
 class WinVdsAgent(AgentLogicBase):
 

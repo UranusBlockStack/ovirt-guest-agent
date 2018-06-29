@@ -100,7 +100,8 @@ class AgentLogicBase:
                 if hbsecs <= 0:
                     self.vio.write('heartbeat',
                                    {'free-ram' : self.dr.getAvailableRAM(),
-                                    'memory-stat' : self.dr.getMemoryStats()})
+                                    'memory-stat' : self.dr.getMemoryStats(),
+                                    'totalrdpconnections' : self.dr.getTotalRDPConnections()})
                     hbsecs = self.heartBitRate
                 usersecs -=1
                 if usersecs <=0:
